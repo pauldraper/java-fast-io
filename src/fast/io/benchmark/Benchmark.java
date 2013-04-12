@@ -68,7 +68,7 @@ public class Benchmark {
 		}
 	}
 	
-	public static long benchmark(Tokenizer tokenizer) throws IOException {
+	private static long benchmark(Tokenizer tokenizer) throws IOException {
 		long start = System.currentTimeMillis();
 		for (int n = tokenizer.readUnsignedInt(); n > 0; n--) {
 			tokenizer.readUnsignedInt();
@@ -82,40 +82,28 @@ public class Benchmark {
 		return System.currentTimeMillis() - start;
 	}
 	
-	public static void main(String[] args) throws FileNotFoundException {
+	private static void printBenchmarks(PrintStream out, AbstractInputStreamFactory factory)
+			throws IOException {
+		for (Tokenizer tokenizer : new TokenizerFactory(factory).createTokenizers()) {
+			try {
+				out.printf("%s: %dms%n", tokenizer.getClass(), benchmark(tokenizer));
+			} catch (IOException e) {
+				out.printf("%s: failed%n", tokenizer.getClass());
+			}
+		}
+	}
+	
+	public static void main(String[] args) throws IOException {
 		File testFile = new File(TEST_FILE_PATH);
 		createTest(new FileOutputStream(testFile));
 		
-		System.out.println("NONBUFFERED");
-		Tokenizer[] tokenizers = new Tokenizer[] {
-			new BufferedReaderTokenizer(new FileInputStream(testFile))
-			, new InputStreamTokenizer(new FileInputStream(testFile))
-			, new ScannerTokenizer(new FileInputStream(testFile))
-			, new StreamTokenizer(new FileInputStream(testFile))
-		};
-		for (Tokenizer tokenizer : tokenizers) {
-			try {
-				System.out.printf("%s: %dms%n", tokenizer.getClass(), benchmark(tokenizer));
-			} catch (IOException e) {
-				System.out.printf("%s: failed%n", tokenizer.getClass());
-			}
-		}
+		// TODO: It seems that first tests are always ~20ms slow...
+		System.out.println("UNBUFFERED");
+		printBenchmarks(System.out, new FileInputStreamFactory(testFile));
 		System.out.println();
 		
 		System.out.println("BUFFERED");
-		Tokenizer[] tokenizers2 = new Tokenizer[] {
-			new BufferedReaderTokenizer(new BufferedInputStream(new FileInputStream(testFile)))
-			, new InputStreamTokenizer(new BufferedInputStream(new FileInputStream(testFile)))
-			, new ScannerTokenizer(new BufferedInputStream(new FileInputStream(testFile)))
-			, new StreamTokenizer(new BufferedInputStream(new FileInputStream(testFile)))
-		};
-		for (Tokenizer tokenizer : tokenizers2) {
-			try {
-				System.out.printf("%s: %dms%n", tokenizer.getClass(), benchmark(tokenizer));
-			} catch (IOException e) {
-				System.out.printf("%s: failed%n", tokenizer.getClass());
-			}
-		}
+		printBenchmarks(System.out, new BufferedFileInputStreamFactory(testFile));
 		System.out.println();
 		
 		testFile.delete();
