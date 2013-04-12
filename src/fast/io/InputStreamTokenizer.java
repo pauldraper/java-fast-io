@@ -55,4 +55,9 @@ public class InputStreamTokenizer implements Tokenizer {
 		return null;
 	}
 
+	@Override
+	public void close() throws IOException {
+		_inputStream.close();
+	}
+
 }

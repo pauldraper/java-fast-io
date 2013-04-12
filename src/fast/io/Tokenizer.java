@@ -1,8 +1,9 @@
 package fast.io;
 
+import java.io.Closeable;
 import java.io.IOException;
 
-public interface Tokenizer {
+public interface Tokenizer extends Closeable {
 
 	String getDescription();
 	

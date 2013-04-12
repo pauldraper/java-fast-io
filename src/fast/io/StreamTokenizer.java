@@ -1,15 +1,20 @@
 package fast.io;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 
 public class StreamTokenizer implements Tokenizer {
 
+	private final Closeable _closeable;
 	private final java.io.StreamTokenizer _tokenizer;
 	
 	public StreamTokenizer(InputStream input) {
-		_tokenizer = new java.io.StreamTokenizer(new InputStreamReader(input));
+		Reader reader = new InputStreamReader(input);
+		_closeable = reader;
+		_tokenizer = new java.io.StreamTokenizer(reader);
 	}
 	
 	@Override
@@ -58,6 +63,11 @@ public class StreamTokenizer implements Tokenizer {
 			}
 		}
 		return stringBuilder.toString();
+	}
+
+	@Override
+	public void close() throws IOException {
+		_closeable.close();
 	}
 
 }

@@ -36,5 +36,10 @@ public class ScannerTokenizer implements Tokenizer {
 	public String readLine() throws IOException {
 		return _scanner.nextLine();
 	}
+
+	@Override
+	public void close() {
+		_scanner.close();
+	}
 	
 }

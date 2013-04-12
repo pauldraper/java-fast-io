@@ -3,6 +3,7 @@ package fast.io.benchmark;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -75,6 +76,16 @@ public class Benchmark {
 		return System.currentTimeMillis() - start;
 	}
 	
+	private static void safeClose(Closeable closeable) {
+		try {
+			closeable.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private static void printBenchmarks(PrintStream out, AbstractInputStreamFactory factory)
 			throws IOException {
 		for (Tokenizer tokenizer : new TokenizerFactory(factory).createTokenizers()) {
@@ -82,6 +93,8 @@ public class Benchmark {
 				out.printf("%s: %dms%n", tokenizer.getClass(), benchmark(tokenizer));
 			} catch (IOException e) {
 				out.printf("%s: failed%n", tokenizer.getClass());
+			} finally {
+				safeClose(tokenizer);
 			}
 		}
 	}

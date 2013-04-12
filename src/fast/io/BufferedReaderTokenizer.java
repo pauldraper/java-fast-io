@@ -47,5 +47,10 @@ public class BufferedReaderTokenizer implements Tokenizer {
 	public String readLine() throws IOException {
 		return _bufferedReader.readLine(); //TODO: misses rest of current line
 	}
+
+	@Override
+	public void close() throws IOException {
+		_bufferedReader.close();
+	}
 	
 }
