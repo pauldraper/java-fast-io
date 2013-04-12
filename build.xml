@@ -1,0 +1,14 @@
+<project default="run">
+	<target name="compile">
+		<mkdir dir="bin"/>
+		<javac srcdir="src" destdir="bin"/>
+	</target>
+	
+	<target name="run" depends="compile">
+		<java classpath="bin" classname="fast.io.benchmark.Benchmark"/>
+	</target>
+
+	<target name="clean">
+		<delete dir="build"/>
+	</target>
+</project>
