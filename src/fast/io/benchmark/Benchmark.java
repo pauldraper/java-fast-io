@@ -3,20 +3,13 @@ package fast.io.benchmark;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Random;
 
-import fast.io.BufferedReaderTokenizer;
-import fast.io.InputStreamTokenizer;
-import fast.io.ScannerTokenizer;
-import fast.io.StreamTokenizer;
 import fast.io.Tokenizer;
 
 public class Benchmark {
